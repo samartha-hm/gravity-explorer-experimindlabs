@@ -215,17 +215,53 @@ function navigation(previous, next) {
 }
 
 function resultCards() {
+  const mass = exhibit.mass;
+  const maxPlanetG = 24.79; // Jupiter reference
+
   return PLANETS.map((p, i) => {
-    const w = formatKg(equivalent(exhibit.mass, i));
+    const w = formatKg(equivalent(mass, i));
     const mult = multiplier(i);
+    const fVal = Math.round(force(mass, i)).toLocaleString();
+    const gVal = p.g.toFixed(2);
+    const meterPercent = Math.min(100, Math.max(10, Math.round((p.g / maxPlanetG) * 100)));
+    const isSun = i === 2;
+    const isEarth = i === 0;
+
     return `
-      <div class="result-card" style="--planet-color:${p.color}">
+      <div class="result-card ${isSun ? 'sun-card' : ''} ${isEarth ? 'earth-card' : ''}" style="--planet-color:${p.color}">
         <div class="card-top">
-          <span class="card-name"><i class="card-dot"></i>${p.name}</span>
-          <small class="card-mult">${mult}×</small>
+          <div class="card-planet-identity">
+            <span class="card-globe" style="background: radial-gradient(circle at 35% 35%, ${p.color}, #08111d);" aria-hidden="true"></span>
+            <div class="card-titles">
+              <h3 class="card-planet-name">${p.name.replace('The ', '').toUpperCase()}</h3>
+              <span class="card-planet-type">${p.type}</span>
+            </div>
+          </div>
+          <span class="card-mult-badge">${mult}×</span>
         </div>
-        <strong class="card-weight">${w}<small>kg</small></strong>
-        <span class="card-status">${p.type}</span>
+
+        <div class="card-weight-block">
+          <strong class="card-weight">${w}<small>kg</small></strong>
+        </div>
+
+        <div class="card-telemetry-grid">
+          <div class="card-telem-cell">
+            <span class="card-telem-lbl">SURFACE GRAVITY</span>
+            <span class="card-telem-val">${gVal} m/s²</span>
+          </div>
+          <div class="card-telem-cell">
+            <span class="card-telem-lbl">FORCE</span>
+            <span class="card-telem-val">${fVal} N</span>
+          </div>
+        </div>
+
+        <div class="card-meter-track" title="Surface gravity: ${gVal} m/s²">
+          <div class="card-meter-bar" style="width: ${meterPercent}%;"></div>
+        </div>
+
+        <div class="card-surface-note">
+          <span>${p.surfaceNote}</span>
+        </div>
       </div>`;
   }).join('');
 }
@@ -273,7 +309,66 @@ function render(forceRender = false) {
     html = `
       <h1 id="main-title" class="sr-only">Solar System</h1>
       <div class="idle-hud">
-        <p class="idle-hint">Stand on the scale or press <strong>Start</strong></p>
+        <p class="idle-hint sr-only">Stand on the scale or press <strong>Start</strong></p>
+        <div class="mission-launchpad" role="region" aria-label="Interactive Exhibit Start Controls">
+          <div class="launchpad-radar-pulse" aria-hidden="true">
+            <span class="sonar-ring ring-1"></span>
+            <span class="sonar-ring ring-2"></span>
+            <span class="sonar-ring ring-3"></span>
+          </div>
+
+          <div class="launchpad-content">
+            <div class="launchpad-header">
+              <span class="launchpad-tag"><span class="live-beacon-dot"></span> LIVE EXHIBIT STATION</span>
+              <h2 class="launchpad-headline">DISCOVER YOUR SOLAR SYSTEM WEIGHT</h2>
+            </div>
+
+            <div class="launchpad-prompts">
+              <!-- Action 1: Physical Weighing Scale -->
+              <div class="prompt-card scale-prompt">
+                <div class="prompt-icon-wrap" aria-hidden="true">
+                  <svg class="prompt-svg" viewBox="0 0 48 48" fill="none">
+                    <rect x="6" y="32" width="36" height="7" rx="3.5" fill="#72d6b3" fill-opacity="0.25" stroke="#72d6b3" stroke-width="2.2"/>
+                    <circle cx="24" cy="18" r="9" fill="#0d1b2a" stroke="#72d6b3" stroke-width="2.2"/>
+                    <path d="M24 13v5l3 2" stroke="#72d6b3" stroke-width="2" stroke-linecap="round"/>
+                    <ellipse cx="14" cy="35.5" rx="3.5" ry="1.5" fill="#72d6b3"/>
+                    <ellipse cx="34" cy="35.5" rx="3.5" ry="1.5" fill="#72d6b3"/>
+                  </svg>
+                  <span class="icon-pulse-glow"></span>
+                </div>
+                <div class="prompt-info">
+                  <strong class="prompt-title">STEP ON THE SCALE</strong>
+                  <span class="prompt-sub">Automatic sensor capture</span>
+                </div>
+                <span class="prompt-badge scale-badge">HANDS FREE</span>
+              </div>
+
+              <!-- Sleek Visual OR Divider -->
+              <div class="prompt-divider" aria-hidden="true">
+                <span class="divider-line"></span>
+                <span class="divider-text">OR</span>
+                <span class="divider-line"></span>
+              </div>
+
+              <!-- Action 2: Physical / UI Arcade Button -->
+              <div class="prompt-card button-prompt">
+                <div class="prompt-icon-wrap" aria-hidden="true">
+                  <svg class="prompt-svg" viewBox="0 0 48 48" fill="none">
+                    <rect x="8" y="12" width="32" height="24" rx="7" fill="#6daeff" fill-opacity="0.22" stroke="#6daeff" stroke-width="2.2"/>
+                    <circle cx="24" cy="24" r="7" fill="#72d6b3" stroke="#ffffff" stroke-width="1.8"/>
+                    <path d="M22 20.5l5 3.5-5 3.5v-7z" fill="#0a1929"/>
+                  </svg>
+                  <span class="icon-pulse-glow green-glow"></span>
+                </div>
+                <div class="prompt-info">
+                  <strong class="prompt-title">PRESS START BUTTON</strong>
+                  <span class="prompt-sub">Begin interactive planetary tour</span>
+                </div>
+                <span class="prompt-badge button-badge">PUSH D2</span>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
       ${navigation(false, 'Start')}
       ${exhibit.fault && settings.mode === 'hardware' ? '<p class="warning">Scale unavailable · Ask a teacher</p>' : ''}`;
@@ -346,9 +441,17 @@ function render(forceRender = false) {
   } else if (results) {
     html = `
       <div class="hud-panel results-hud">
-        <div class="destination-badge">MISSION COMPLETE // DEBRIEFING</div>
-        <h1 id="main-title">Solar System Weights</h1>
-        <p class="results-intro">Earth Baseline: <strong>${formatKg(mass)} kg</strong> · Mass stays identical everywhere, gravity changes your weight.</p>
+        <div class="results-header-bar">
+          <div class="results-title-group">
+            <div class="destination-badge"><span class="badge-dot" style="background:#72d6b3"></span>MISSION COMPLETE // DEBRIEFING</div>
+            <h1 id="main-title" class="results-title">Solar System Weights</h1>
+          </div>
+          <div class="results-baseline-chip">
+            <span class="baseline-chip-label">EARTH BASELINE</span>
+            <span class="baseline-chip-mass">${formatKg(mass)} kg</span>
+            <span class="baseline-chip-sub">Mass stays identical everywhere · Local gravity dictates weight</span>
+          </div>
+        </div>
         <div class="results-grid">${resultCards()}</div>
       </div>
       ${navigation(true, 'Finish')}`;
