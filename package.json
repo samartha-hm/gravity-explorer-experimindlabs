@@ -1,0 +1,45 @@
+{
+  "name": "gravity-explorer",
+  "version": "1.5.0",
+  "private": true,
+  "description": "Offline, interactive solar system weight exhibit for schools by ExpermindLabs",
+  "author": "ExpermindLabs",
+  "type": "module",
+  "main": "electron/main.cjs",
+  "scripts": {
+    "dev": "vite --host 127.0.0.1",
+    "build": "vite build",
+    "preview": "vite preview --host 127.0.0.1",
+    "test": "node --test tests/*.test.js",
+    "test:desktop": "electron tests/electron-smoke.cjs",
+    "test:all": "node --test tests/*.test.js && electron tests/test-all-10.cjs",
+    "start": "electron .",
+    "package": "npm run build && electron-builder --win portable",
+    "package:dir": "npm run build && electron-builder --win --dir"
+  },
+  "dependencies": {
+    "three": "^0.180.0"
+  },
+  "devDependencies": {
+    "electron": "^40.0.0",
+    "electron-builder": "^26.0.12",
+    "vite": "^7.1.0"
+  },
+  "build": {
+    "appId": "org.experimindlabs.gravityexplorer",
+    "productName": "GravityExplorer",
+    "files": [
+      "dist/**/*",
+      "electron/**/*",
+      "package.json"
+    ],
+    "directories": {
+      "output": "release"
+    },
+    "win": {
+      "target": "portable",
+      "artifactName": "GravityExplorer-${version}.exe",
+      "signAndEditExecutable": false
+    }
+  }
+}

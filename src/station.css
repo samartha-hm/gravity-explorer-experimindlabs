@@ -1,0 +1,638 @@
+/* =========================================================================
+   GravityExplorer by ExpermindLabs — Futuristic NASA Flight Deck Kiosk Styles
+   ========================================================================= */
+
+/* Topbar Branding */
+.topbar {
+  border: none;
+  height: 70px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+  z-index: 10;
+}
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  text-decoration: none;
+  user-select: none;
+}
+.brand-logo {
+  width: 44px;
+  height: 44px;
+  object-fit: contain;
+  filter: drop-shadow(0 0 10px rgba(109, 174, 255, 0.45));
+}
+.brand-text {
+  display: flex;
+  flex-direction: column;
+}
+.brand-title {
+  font-size: 21px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  color: #eaf1f7;
+  line-height: 1.1;
+}
+.brand-light {
+  font-weight: 300;
+  color: #7ab3e8;
+}
+.brand-sub {
+  font-size: 8px;
+  letter-spacing: 2px;
+  color: #6486a6;
+  font-weight: 600;
+  margin-top: 3px;
+}
+
+.status-pill {
+  font-size: 10px;
+  letter-spacing: 1.6px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #d5b887;
+  border: 1px solid rgba(213, 184, 135, 0.35);
+  border-radius: 20px;
+  padding: 6px 14px;
+  background: rgba(10, 18, 28, 0.6);
+  backdrop-filter: blur(8px);
+}
+.status-pill.live {
+  color: #72d6b3;
+  border-color: rgba(114, 214, 179, 0.4);
+}
+.status-pill.live i {
+  background: #72d6b3;
+  box-shadow: 0 0 6px #72d6b3;
+}
+
+.orbital-decor, footer, .system-labels { display: none !important; }
+
+/* Station Buttons (Tactile Fair-Style Physical Arcade UI) */
+.station-controls {
+  position: absolute;
+  bottom: 16px;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 24px;
+  z-index: 25 !important;
+  pointer-events: none;
+}
+.station-button {
+  pointer-events: auto !important;
+  min-width: 190px;
+  height: 66px;
+  border-radius: 33px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  padding: 0 32px;
+  font: 600 17px/1 'Segoe UI', system-ui, sans-serif;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  transition: transform 0.15s, box-shadow 0.15s, background 0.15s;
+  user-select: none;
+  z-index: 26 !important;
+}
+.station-button span {
+  font-size: 26px;
+  font-weight: 300;
+}
+.station-next {
+  color: #041f1c;
+  background: linear-gradient(135deg, #d4ffea 0%, #7ee3d5 100%);
+  border: 1px solid #d4fff0;
+  box-shadow: 0 5px 0 #2b6e67, 0 0 30px rgba(126, 227, 213, 0.3);
+}
+.station-next:not(:disabled):hover {
+  background: linear-gradient(135deg, #e4fff2 0%, #95ede0 100%);
+  box-shadow: 0 6px 0 #2b6e67, 0 0 40px rgba(126, 227, 213, 0.45);
+}
+.station-previous {
+  color: #d6e8f2;
+  background: linear-gradient(140deg, #182b3d 0%, #0d1926 100%);
+  border: 1px solid #486578;
+  box-shadow: 0 5px 0 #081018;
+}
+.station-previous:not(:disabled):hover {
+  background: linear-gradient(140deg, #22384f 0%, #112030 100%);
+  border-color: #61849c;
+}
+.station-button:disabled {
+  opacity: 0.2;
+  cursor: default;
+  box-shadow: none;
+  pointer-events: none;
+}
+.station-button:not(:disabled):active {
+  transform: translateY(4px);
+  box-shadow: none;
+}
+.station-button:focus-visible {
+  outline: 3px solid #7ee3d5;
+  outline-offset: 6px;
+}
+
+/* =========================================================================
+   Phase 1: Inactivity (Idle Mode) — 3D Solar System Takes Over Entire Screen
+   ========================================================================= */
+body[data-phase=idle] .planet-strip { display: none; }
+body[data-phase=idle] .topbar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(180deg, rgba(8, 14, 24, 0.85) 0%, transparent 100%);
+  padding: 16px 4vw;
+}
+body[data-phase=idle] .stage {
+  position: static;
+  min-height: 100vh;
+  padding: 0;
+  overflow: visible;
+}
+
+/* =========================================================================
+   Fullscreen 3D Celestial Viewport (Edge-to-Edge Across Idle & Journey)
+   ========================================================================= */
+#planet-scene,
+body[data-phase=idle] #planet-scene,
+body[data-phase=weighing] #planet-scene,
+body[data-phase=journey] #planet-scene {
+  position: fixed !important;
+  inset: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  z-index: 1 !important;
+  pointer-events: none !important;
+  overflow: visible !important;
+  background: transparent !important;
+}
+
+#planet-scene canvas {
+  display: block !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  pointer-events: none !important;
+}
+
+#planet-scene::before,
+#planet-scene::after {
+  display: none !important;
+}
+
+body[data-phase=results] #planet-scene {
+  display: none !important;
+}
+
+body[data-phase=idle] .content {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  min-height: 0;
+  pointer-events: none;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+  z-index: 10;
+}
+body[data-phase=idle] .idle-hud {
+  position: absolute;
+  bottom: 100px;
+  text-align: center;
+  pointer-events: none;
+  z-index: 10;
+}
+body[data-phase=idle] .idle-hint {
+  font-size: 15px;
+  letter-spacing: 2.5px;
+  color: #92b8d8;
+  text-transform: uppercase;
+  background: rgba(10, 20, 32, 0.65);
+  border: 1px solid rgba(114, 164, 212, 0.25);
+  border-radius: 30px;
+  padding: 10px 24px;
+  backdrop-filter: blur(8px);
+  box-shadow: 0 4px 25px rgba(0, 0, 0, 0.5);
+}
+body[data-phase=idle] .idle-hint strong {
+  color: #7ee3d5;
+  font-weight: 600;
+}
+body[data-phase=idle] .station-controls {
+  bottom: 24px;
+  justify-content: flex-end;
+  padding: 0 4vw;
+}
+body[data-phase=idle] .station-previous {
+  display: none;
+}
+body[data-phase=idle] .station-next {
+  min-width: 240px;
+  height: 72px;
+  font-size: 19px;
+}
+body[data-phase=idle] .warning {
+  position: absolute;
+  bottom: 110px;
+  width: 100%;
+  text-align: center;
+  color: #ffaa66;
+  font-size: 13px;
+  letter-spacing: 1px;
+}
+
+/* =========================================================================
+   Phase 2: Weighing HUD & Stability Tracking
+   ========================================================================= */
+.weighing-hud {
+  width: 48%;
+  z-index: 12 !important;
+}
+.measurement-card {
+  background: rgba(14, 25, 40, 0.8);
+  border: 1px solid rgba(114, 164, 212, 0.3);
+  border-radius: 12px;
+  padding: 24px;
+  margin-top: 24px;
+  backdrop-filter: blur(12px);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.45);
+}
+.measurement-top {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  letter-spacing: 2px;
+  color: #7ea3c7;
+  font-weight: 600;
+}
+.live-measurement {
+  display: flex;
+  align-items: baseline;
+  font-size: 68px;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 12px 0;
+  line-height: 1;
+}
+.live-measurement small {
+  font-size: 24px;
+  color: #72d6b3;
+  margin-left: 8px;
+}
+.signal-bars {
+  margin-left: auto;
+  font-size: 20px;
+  color: #72d6b3;
+  opacity: 0.7;
+}
+.stability-track {
+  height: 8px;
+  background: rgba(30, 50, 75, 0.6);
+  border-radius: 4px;
+  overflow: hidden;
+  margin: 14px 0 10px;
+}
+.stability-track i {
+  display: block;
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, #58a9e0, #72d6b3);
+  border-radius: 4px;
+  transition: width 0.1s linear;
+  box-shadow: 0 0 10px #72d6b3;
+}
+#stability-label {
+  font-size: 13px;
+  color: #9cb8d4;
+  margin: 0;
+}
+
+/* =========================================================================
+   Phase 3: Journey & Clean NASA Telemetry HUD
+   ========================================================================= */
+body[data-phase=journey] .content {
+  height: 100%;
+  width: 100%;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  position: relative !important;
+  z-index: 10 !important;
+}
+
+.hud-panel {
+  position: relative;
+  width: 48%;
+  max-width: 650px;
+  padding: 10px 0;
+  z-index: 12 !important;
+  pointer-events: none;
+}
+.destination-badge {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 2.2px;
+  color: #78a9db;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 6px;
+}
+.badge-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  box-shadow: 0 0 8px currentColor;
+}
+.planet-title {
+  font-family: 'Segoe UI', system-ui, sans-serif;
+  font-size: clamp(48px, 5.2vw, 82px);
+  font-weight: 700;
+  letter-spacing: -2px;
+  line-height: 1.0;
+  margin: 2px 0 12px;
+  color: #ffffff;
+  text-transform: uppercase;
+  text-shadow: 0 4px 25px rgba(0, 0, 0, 0.7);
+}
+
+.weight-answer {
+  margin: 8px 0 20px;
+}
+.weight-heading {
+  font-size: 11px;
+  letter-spacing: 2.8px;
+  color: #7a98b3;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+.answer-number {
+  font-size: min(17vw, 26vh);
+  font-weight: 700;
+  line-height: 0.95;
+  color: #ffffff;
+  display: flex;
+  align-items: baseline;
+  text-shadow: 0 6px 35px rgba(0, 0, 0, 0.8);
+}
+.answer-number.digits-4 {
+  font-size: min(13vw, 20vh);
+}
+.weight-integer {
+  letter-spacing: -2px;
+}
+.weight-decimal {
+  font-size: 0.52em;
+  opacity: 0.85;
+  color: #b5d5f5;
+  letter-spacing: 0;
+}
+.weight-unit {
+  font-size: 0.32em;
+  font-weight: 400;
+  margin-left: 14px;
+  color: #78a4ce;
+  letter-spacing: 1px;
+}
+
+/* Precision Telemetry Bar */
+.telemetry-bar {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  background: rgba(14, 25, 40, 0.75);
+  border: 1px solid rgba(114, 164, 212, 0.25);
+  border-radius: 8px;
+  padding: 12px 18px;
+  margin: 16px 0;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+}
+.telemetry-item {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.telemetry-label {
+  font-size: 9px;
+  letter-spacing: 1.6px;
+  color: #6386a6;
+  font-weight: 600;
+}
+.telemetry-item strong {
+  font-size: 16px;
+  color: #dceaf7;
+  font-weight: 600;
+}
+.telemetry-item small {
+  font-size: 12px;
+  color: #72d6b3;
+  font-weight: 500;
+}
+
+.capture-note {
+  font-size: 12px;
+  color: #92b1ce;
+  letter-spacing: 0.6px;
+  margin-top: 10px;
+  display: inline-block;
+  background: rgba(12, 22, 35, 0.6);
+  border-left: 3px solid #78a9db;
+  padding: 6px 14px;
+  border-radius: 0 6px 6px 0;
+}
+
+/* =========================================================================
+   Phase 4: Results (10-World Comparison Grid)
+   ========================================================================= */
+body[data-phase=results] .content {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  align-items: center;
+}
+.results-hud {
+  width: 100%;
+  max-width: none;
+}
+body[data-phase=results] h1 {
+  font-size: 38px;
+  font-weight: 700;
+  letter-spacing: -1px;
+  margin: 4px 0 8px;
+  color: #ffffff;
+}
+.results-intro {
+  font-size: 13px;
+  color: #9cb8d4;
+  margin-bottom: 16px;
+}
+.results-intro strong {
+  color: #72d6b3;
+}
+
+.results-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 12px;
+  margin: 12px 0 24px;
+  width: 100%;
+}
+.result-card {
+  background: rgba(14, 25, 40, 0.75);
+  border: 1px solid rgba(114, 164, 212, 0.2);
+  border-radius: 10px;
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  backdrop-filter: blur(10px);
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+.result-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--planet-color, #6daeff);
+  box-shadow: 0 0 8px var(--planet-color, #6daeff);
+}
+.card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 12px;
+  font-weight: 600;
+  color: #dceaf7;
+}
+.card-name {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.card-dot {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--planet-color, #6daeff);
+}
+.card-mult {
+  font-size: 11px;
+  color: #72d6b3;
+  font-weight: 500;
+}
+.card-weight {
+  font-size: 32px;
+  font-weight: 700;
+  color: #ffffff;
+  line-height: 1.05;
+}
+.card-weight small {
+  font-size: 13px;
+  font-weight: 400;
+  color: #7ea3c7;
+  margin-left: 3px;
+}
+.card-status {
+  font-size: 9px;
+  letter-spacing: 0.8px;
+  color: #6385a3;
+  text-transform: uppercase;
+}
+
+/* =========================================================================
+   Bottom Planet Strip (10 Worlds)
+   ========================================================================= */
+.planet-strip {
+  background: rgba(8, 14, 24, 0.7);
+  border-top: 1px solid rgba(114, 164, 212, 0.15);
+  backdrop-filter: blur(10px);
+  height: 74px;
+  display: flex;
+  align-items: center;
+  padding: 0 4vw;
+}
+.planet-list {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  gap: 8px;
+}
+.planet-stop {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  font-size: 9px;
+  letter-spacing: 0.8px;
+  color: #55728a;
+  cursor: default;
+  transition: color 0.2s;
+  user-select: none;
+}
+.planet-stop.active {
+  color: #ffffff;
+  font-weight: 600;
+}
+.planet-stop.visited {
+  color: #8bb0cf;
+}
+.mini-planet {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  background-color: var(--planet-color);
+  box-shadow: 0 0 6px rgba(0, 0, 0, 0.6);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.planet-stop.active .mini-planet {
+  transform: scale(1.35);
+  border-color: #ffffff;
+  box-shadow: 0 0 12px var(--planet-color);
+}
+
+/* Responsive Scaling for Fair Displays (1080p, 1366x768, Kiosks) */
+@media (min-width: 1000px) and (min-height: 650px) {
+  .app-shell {
+    max-width: none;
+    grid-template-rows: 70px minmax(0, 1fr) 74px 0;
+    padding: 0 4vw;
+  }
+}
+
+@media (max-width: 999px) {
+  .app-shell { padding: 0 20px; }
+  .hud-panel { width: 100%; margin-top: 280px; }
+  .results-grid { grid-template-columns: repeat(2, 1fr); }
+  .telemetry-bar { grid-template-columns: 1fr; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .station-button { transition: none; }
+}
